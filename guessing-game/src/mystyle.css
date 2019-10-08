@@ -1,9 +1,7 @@
 
 .input {
-    width: 30%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 2px solid red;
-    border-radius: 4px;
+  margin-right: "8px";
+  text-align: "center";
+  height: "32px";
+  width: "32%"
   }

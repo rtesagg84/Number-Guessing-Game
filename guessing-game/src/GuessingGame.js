@@ -5,9 +5,7 @@ const getInitialState = () => ({
   status: 0,
   nextMove: "Guess a number between 1 and 10",
   guess: 0,
-  try: 0,
-  error: null,
-  target: null
+ 
 });
 
 class GuessingGame extends React.Component {
@@ -20,7 +18,8 @@ class GuessingGame extends React.Component {
       random: "",
       max: "",
       userInput: "",
-      counter: 0
+      counter: 0,
+      try: 0
     };
   }
 
@@ -35,17 +34,19 @@ class GuessingGame extends React.Component {
 
   minChange = event => {
     this.setState({ min: event.target.value });
-    this.refs.child.startTimer();
+    
   };
 
   maxChange = event => {
     this.setState({ max: event.target.value });
+    this.refs.child.startTimer();
   };
   handleclike = () => {
     this.setState({
       random: Math.floor(Math.random() * 10 + this.state.max, this.state.min)
-      });
-     
+    
+    });
+    
   };
   userinput = event => {
     const newValue = Number.parseInt(event.target.value, 10);
@@ -65,14 +66,14 @@ class GuessingGame extends React.Component {
     }
   };
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault();
-
     const { random, guess } = this.state;
-
+    
     this.setState({
       try: this.state.try + 1
     });
+    console.log(this.state.try)
 
     if (guess > 10 || guess < 1) {
       this.setState({
@@ -83,7 +84,7 @@ class GuessingGame extends React.Component {
 
     if (guess === random) {
       this.setState({ status: random });
-
+     
       return;
     }
 
@@ -96,7 +97,9 @@ class GuessingGame extends React.Component {
   resetGame = () => {
     if (this.state.status === this.state.random) {
       this.setState(getInitialState());
+      
     }
+    window.location.reload(false);
   };
 
   render() {
@@ -106,25 +109,26 @@ class GuessingGame extends React.Component {
           <h1 style={{ color: "green" }}>You Won!</h1>
           <p>Random number: {this.state.random}</p>
           <p>Number of tries: {this.state.try}</p>
+          <p>Total time taken:{this.refs.child.timecounter}</p>
           <button onClick={this.resetGame}>Play again</button>
         </div>
       );
     }
 
     return (
-      <div className="ui container" style={{ margin: "30px", width: "60%" }}>
+      <div className="ui container" style={{ margin: "30px", width: "40%" }}>
         <div className="ui segment">
-          <div className="ui form">
+          <div className="ui form" style={{ color: "blue" }}>
             <div className="field">
               <div>
-                <label style={{ color: "red", padding: "100px",textAlignLe: "center" }}>
-                                 RANDOM NUMBER GUESSING GAME
+                <label style={{ color: "red", padding: "150px" }}>
+                  RANDOM NUMBER GUESSING GAME
                 </label>
                 <Timer ref="child" />
               </div>
               <br />
 
-              <div style={{ textAlign: "center", marginTop: "0%" }}>
+              <div style={{ textAlign: "center", marginTop: "1%" }}>
                 <div>
                   <label>Enter a number between 1 and 10</label>
                   <br />
@@ -139,7 +143,7 @@ class GuessingGame extends React.Component {
                         marginRight: "8px",
                         textAlign: "center",
                         height: "32px",
-                        width: "150px"
+                        width: "32%"
                       }}
                     />
                     <br />
@@ -155,17 +159,21 @@ class GuessingGame extends React.Component {
                         marginRight: "8px",
                         textAlign: "center",
                         height: "32px",
-                        width: "150px"
+                        width: "32%"
                       }}
                     />
                     <br />
                   </div>
 
-                  <button style={{ height: "32px",padding:"50"}}type="GameStart" onClick={this.handleclike}>
+                  <button
+                    style={{ height: "32px", padding: "50" }}
+                    type="GameStart"
+                    onClick={this.handleclike}
+                  >
                     StartGame
                   </button>
                 </div>
-                <br />
+
                 <div>
                   <p>This is the Random Number {this.state.random}</p>
                 </div>
@@ -175,23 +183,22 @@ class GuessingGame extends React.Component {
                 {this.state.error && (
                   <p style={{ color: "red" }}>{this.state.error}</p>
                 )}
-                
+
                 <input
                   type="text"
                   style={{
                     marginRight: "8px",
                     textAlign: "center",
                     height: "32px",
-                    width: "150px"
+                    width: "32%"
                   }}
                   placeholder="1-10"
                   onChange={this.userinput}
                 />
+                <br />
                 <button onClick={this.onSubmit} style={{ height: "32px" }}>
                   Check
                 </button>
-                
-                
               </div>
             </div>
           </div>

@@ -1,10 +1,14 @@
 import React from 'react'
+const getInitialState = () => ({
+  time:{},
+  seconds:30
+});
 class Timer extends React.Component {
     constructor() {
       super();
-      this.state = { time: {}, seconds: 30 };
+      this.state = getInitialState();
       this.timer = 0;
-      this.counter=0;
+      this.timecounter=0;
       this.startTimer = this.startTimer.bind(this);
       this.countDown = this.countDown.bind(this);
     }
@@ -31,16 +35,20 @@ class Timer extends React.Component {
         this.timer = setInterval(this.countDown, 1000);
       }
     }
-  
+    resetGame = () => {
+     
+        this.setState(getInitialState());
+        window.location.reload(false);
+    };
     countDown() {
       // Remove one second, set state so a re-render happens.
       let seconds = this.state.seconds - 1;
-      this.counter+=1
+      this.timecounter+=1
       this.setState({
         time: this.secondsToTime(seconds),
         seconds: seconds,
         
-      });if( this.counter===20){
+      });if( this.timecounter===20){
         
         alert("Oops!!! 10 second left")
       }
@@ -48,16 +56,27 @@ class Timer extends React.Component {
       // Check if we're at zero.
       if (seconds === 0) { 
         clearInterval(this.timer);
-      alert("Game over start new game");
-      
+          
+        return;
+     
       }
     }
   
     render() {
+      if (this.state.seconds === 0) { 
+        clearInterval(this.timer);
+     
+     return(<div style={{textAlign:"center"}}>
+       <h1 style={{ color: "green" }}>Game over!</h1>
+     <button onClick={this.resetGame} >New Game</button>
+     </div>)
+      }
+    
       return(
         <div>
           
-         Running time: {this.state.time.s}
+        Running time: {this.state.time.s}
+        
         </div>
       );
     }
