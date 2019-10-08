@@ -4,8 +4,7 @@ import Timer from "./Timer";
 const getInitialState = () => ({
   status: 0,
   nextMove: "Guess a number between 1 and 10",
-  guess: 0,
- 
+  guess: 0
 });
 
 class GuessingGame extends React.Component {
@@ -33,6 +32,7 @@ class GuessingGame extends React.Component {
   }
 
   minChange = event => {
+    
     this.setState({ min: event.target.value });
     
   };
@@ -44,9 +44,7 @@ class GuessingGame extends React.Component {
   handleclike = () => {
     this.setState({
       random: Math.floor(Math.random() * 10 + this.state.max, this.state.min)
-    
     });
-    
   };
   userinput = event => {
     const newValue = Number.parseInt(event.target.value, 10);
@@ -66,14 +64,14 @@ class GuessingGame extends React.Component {
     }
   };
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
     const { random, guess } = this.state;
-    
+
     this.setState({
       try: this.state.try + 1
     });
-    console.log(this.state.try)
+    //console.log(this.state.try);
 
     if (guess > 10 || guess < 1) {
       this.setState({
@@ -84,7 +82,7 @@ class GuessingGame extends React.Component {
 
     if (guess === random) {
       this.setState({ status: random });
-     
+
       return;
     }
 
@@ -97,7 +95,6 @@ class GuessingGame extends React.Component {
   resetGame = () => {
     if (this.state.status === this.state.random) {
       this.setState(getInitialState());
-      
     }
     window.location.reload(false);
   };
@@ -116,7 +113,17 @@ class GuessingGame extends React.Component {
     }
 
     return (
-      <div className="ui container" style={{ margin: "30px", width: "40%" }}>
+      <div
+        className="ui container"
+        style={{
+          margin: "30px",
+          width: "40%",
+          mozBoxShadow: " 3px 3px 5px 6px #ccc",
+          webkitBoxShadow: "3px 3px 5px 6px #ccc",
+          BoxShadow: "3px 3px 5px 6px #ccc",
+          backgroundColor: "rgb(68,68,68)"
+        }}
+      >
         <div className="ui segment">
           <div className="ui form" style={{ color: "blue" }}>
             <div className="field">
@@ -173,10 +180,6 @@ class GuessingGame extends React.Component {
                     StartGame
                   </button>
                 </div>
-
-                <div>
-                  <p>This is the Random Number {this.state.random}</p>
-                </div>
               </div>
               <div style={{ textAlign: "center", marginTop: "15%" }}>
                 <p>{this.state.nextMove}</p>
@@ -208,3 +211,14 @@ class GuessingGame extends React.Component {
   }
 }
 export default GuessingGame;
+/*<div>
+<p>This is the Random Number {this.state.random}</p>
+</div>
+
+,mozBoxShadow:   " 3px 3px 5px 6px #ccc",
+      webkitBoxShadow: "3px 3px 5px 6px #ccc",BoxShadow:"3px 3px 5px 6px #ccc",backgroundColor: "rgb(68,68,68)"
+
+
+
+
+*/
