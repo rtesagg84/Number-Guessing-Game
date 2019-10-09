@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM  from 'react-dom'
+import App from './App'
 
-import GuessingGame from './GuessingGame'
-//import Timer from './Timer'
 
-ReactDOM.render(<GuessingGame/> ,document.querySelector('#root'))
+ReactDOM.render(<App/> ,document.querySelector('#root'))
