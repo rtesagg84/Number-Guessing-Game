@@ -10,8 +10,9 @@ const getInitialState = () => ({
 class GuessingGame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = getInitialState();
+    this.state = getInitialState(); // You are setting the state here, but overwriting it below...
 
+    // This state declaration overwrites what has been set above.
     this.state = {
       min: "",
       random: "",
@@ -23,7 +24,8 @@ class GuessingGame extends React.Component {
   }
 
   componentDidMount() {
-    this.handleclike();
+    // this.handleclike(); 
+    // Instead of picking the random number when the page loads, I would do it when the user clicks the 'start game' button!! This way you can generate the value based on the min and max values
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.status === this.state.random) {
@@ -32,15 +34,20 @@ class GuessingGame extends React.Component {
   }
 
   minChange = event => {
-    
-    this.setState({ min: event.target.value });
-    
+    const max = parseInt(this.state.max);
+    if (event.target.value >= max) {
+      alert('Must be smaller than max!');
+      return;
+    } else {
+      this.setState({ min: event.target.value });
+    }
   };
 
   maxChange = event => {
     this.setState({ max: event.target.value });
     this.refs.child.startTimer()
   };
+
   handleclike = () => {
     
     this.setState({
@@ -48,6 +55,7 @@ class GuessingGame extends React.Component {
     });
    
   };
+
   userinput = event => {
     const newValue = Number.parseInt(event.target.value, 10);
 
@@ -77,9 +85,11 @@ class GuessingGame extends React.Component {
     });
     
 
-    if (guess > 10 || guess < 1) {
+    // You want to make this conditional dynamic, and based on the user's inputs
+    if (guess > this.state.max || guess < this.state.min) {
       this.setState({
-        error: "Value must be between 1 and 10!"
+        // You can use string literals here to make the message dynamic
+        error: `Value must be between ${this.state.min} and ${this.state.max}!`
       });
       return;
     }
@@ -102,6 +112,7 @@ class GuessingGame extends React.Component {
     if (this.state.status === this.state.random) {
       this.setState(getInitialState());
     }
+    // If you are reloading the page, you don't need to setState above, it will get reset on page load
     window.location.reload(false);
   };
 
@@ -150,15 +161,17 @@ class GuessingGame extends React.Component {
               <Timer ref="child" />
               <div style={{ textAlign: "center", marginTop: "1%" }}>
                 <div>
-                  <label>Enter a number between 1 and 10</label>
+                  {/* Tell the user they can pick the number range they want! */}
+                  <label>Enter your guess range!</label>
                   <br />
                   <div>
                     <label>Min</label>
                     <input
                       type="number"
-                      placeholder="1-10"
+                      placeholder="1" // Use a placeholder to show the user a 'default'
                       value={this.state.min}
-                      onChange={this.minChange}
+                      // When you are using controlled inputs you need to access the 'event' variable
+                      onChange={event => this.minChange(event)}
                       style={{
                         marginRight: "8px",
                         textAlign: "center",
@@ -172,9 +185,9 @@ class GuessingGame extends React.Component {
                     <label>Max</label>
                     <input
                       type="number"
-                      placeholder="1-10"
+                      placeholder="10" // Same with this one. Define a default placeholder
                       value={this.state.max}
-                      onChange={this.maxChange}
+                      onChange={event => {this.maxChange(event)}}
                       style={{
                         marginRight: "8px",
                         textAlign: "center",

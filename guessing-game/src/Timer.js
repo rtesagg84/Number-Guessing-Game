@@ -1,7 +1,8 @@
 import React from 'react'
 const getInitialState = () => ({
   time:{},
-  seconds:30
+  seconds:30,
+  timerId: undefined
 });
 class Timer extends React.Component {
     constructor() {
@@ -37,7 +38,10 @@ class Timer extends React.Component {
   
     startTimer() {
       if (this.timer ===0 && this.state.seconds > 0) {
-        this.timer = setInterval(this.countDown, 1000);
+        const TID = setInterval(this.countDown, 1000); // attach your timer to a state value
+        this.setState({
+          timerId: TID
+        })
       }
     }
     resetGame = () => {
