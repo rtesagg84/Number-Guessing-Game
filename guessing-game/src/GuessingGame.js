@@ -17,7 +17,7 @@ class GuessingGame extends React.Component {
       random: "",
       max: "",
       userInput: "",
-      counter: 0,
+      counter: 5,
       try: 0
     };
   }
@@ -43,7 +43,7 @@ class GuessingGame extends React.Component {
   };
   handleclike = () => {
     this.setState({
-      random: Math.floor(Math.random() * 10 + this.state.max, this.state.min)
+      random: Math.floor(Math.random()*(this.state.max-this.state.min+1)+this.state.min)
     });
   };
   userinput = event => {
@@ -85,6 +85,8 @@ class GuessingGame extends React.Component {
 
       return;
     }
+    
+
 
     if (guess > random) {
       this.setState({ nextMove: "Too high" });
@@ -111,6 +113,14 @@ class GuessingGame extends React.Component {
         </div>
       );
     }
+    if(this.state.counter===this.state.try){
+     return( <div  style={{ textAlign: "center", marginTop: "15%" }}>
+         <h1 style={{ color: "green" }}>Oops!! you reach the maximom trial!</h1>
+         <button onClick={this.resetGame}>Play again</button>
+      </div>
+     )
+
+    }
 
     return (
       <div
@@ -127,8 +137,8 @@ class GuessingGame extends React.Component {
               <div>
                 <label style={{ color: "red", padding: "150px" }}>
                   RANDOM NUMBER GUESSING GAME
-                </label>
-                <Timer ref="child" />
+                </label>               
+                 <Timer ref="child" />
               </div>
               <br />
 

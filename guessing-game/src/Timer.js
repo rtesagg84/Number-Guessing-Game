@@ -5,10 +5,13 @@ const getInitialState = () => ({
 });
 class Timer extends React.Component {
     constructor() {
+     
       super();
+      
       this.state = getInitialState();
       this.timer = 0;
       this.timecounter=0;
+      this.timeHolder="";
       this.startTimer = this.startTimer.bind(this);
       this.countDown = this.countDown.bind(this);
     }
@@ -21,6 +24,7 @@ class Timer extends React.Component {
       let obj = {
         
         "s": seconds
+        
       };
       return obj;
     }
@@ -28,6 +32,7 @@ class Timer extends React.Component {
     componentDidMount() {
       let timeLeftVar = this.secondsToTime(this.state.seconds);
       this.setState({ time: timeLeftVar });
+     
     }
   
     startTimer() {
@@ -41,6 +46,7 @@ class Timer extends React.Component {
         window.location.reload(false);
     };
     countDown() {
+   
       // Remove one second, set state so a re-render happens.
       let seconds = this.state.seconds - 1;
       this.timecounter+=1
@@ -65,7 +71,6 @@ class Timer extends React.Component {
     render() {
       if (this.state.seconds === 0) { 
         clearInterval(this.timer);
-     
      return(<div style={{textAlign:"center"}}>
        <h1 style={{ color: "green" }}>Game over!</h1>
      <button onClick={this.resetGame} >New Game</button>
@@ -83,4 +88,4 @@ class Timer extends React.Component {
   }
   
   export default Timer;
-  
+  //Running time: {this.state.time.s}
