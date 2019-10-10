@@ -114,14 +114,11 @@ class GuessingGame extends React.Component {
 
     return (
       <div
-        className="ui container"
+        className="ui container" 
         style={{
           margin: "30px",
           width: "40%",
-          mozBoxShadow: " 3px 3px 5px 6px #ccc",
-          webkitBoxShadow: "3px 3px 5px 6px #ccc",
-          BoxShadow: "3px 3px 5px 6px #ccc",
-          backgroundColor: "rgb(68,68,68)"
+          boxShadow:  "3px 3px 5px 6px #ccc"
         }}
       >
         <div className="ui segment">
