@@ -32,19 +32,21 @@ class GuessingGame extends React.Component {
   }
 
   minChange = event => {
-    
+    this.refs.child.startTimer()
     this.setState({ min: event.target.value });
     
   };
 
   maxChange = event => {
     this.setState({ max: event.target.value });
-    this.refs.child.startTimer();
+    
   };
   handleclike = () => {
+   
     this.setState({
       random: Math.floor(Math.random()*(this.state.max-this.state.min+1)+this.state.min)
     });
+   
   };
   userinput = event => {
     const newValue = Number.parseInt(event.target.value, 10);
@@ -63,8 +65,10 @@ class GuessingGame extends React.Component {
       });
     }
   };
+ 
 
   onSubmit = event => {
+   
     event.preventDefault();
     const { random, guess } = this.state;
 
@@ -82,7 +86,7 @@ class GuessingGame extends React.Component {
 
     if (guess === random) {
       this.setState({ status: random });
-
+      
       return;
     }
     
@@ -103,6 +107,7 @@ class GuessingGame extends React.Component {
 
   render() {
     if (this.state.status === this.state.random) {
+      clearInterval(this.refs.child.timer)
       return (
         <div style={{ textAlign: "center", marginTop: "15%" }}>
           <h1 style={{ color: "green" }}>You Won!</h1>
@@ -114,6 +119,7 @@ class GuessingGame extends React.Component {
       );
     }
     if(this.state.counter===this.state.try){
+      clearInterval(this.refs.child.timer)
      return( <div  style={{ textAlign: "center", marginTop: "15%" }}>
          <h1 style={{ color: "green" }}>Oops!! you reach the maximom trial!</h1>
          <button onClick={this.resetGame}>Play again</button>
