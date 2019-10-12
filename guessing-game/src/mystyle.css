@@ -1,26 +1,7 @@
 
 .input {
-  margin-right: "8px";
-  text-align: "center";
-  height: "32px";
-  width: "32%"
+  margin-right: 8px;
+  text-align: center;
+  height: 32%;
+  width: 32%
   }
-  .shadow {
-    -moz-box-shadow:    3px 3px 5px 6px #ccc;
-    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
-    box-shadow:         3px 3px 5px 6px #ccc;
-  }
-  .shadow1 {
-    margin: "30px";
-    width: "40%";
-   
-    background-color: rgb(68,68,68); 
-  -moz-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
-    -webkit-box-shadow: 5px 5px 5px rgba(68,68,68,0.6);
-    box-shadow: 5px 5px 5px rgba(68,68,68,0.6)
-  }
-  .div-style{ 
-    text-align: "center";
-     margin-top: "15%" 
-    }
-   

@@ -62,8 +62,7 @@ class Timer extends React.Component {
       // Check if we're at zero.
       if (seconds === 0) { 
         clearInterval(this.timer);
-          
-        return;
+          return;
      
       }
     }
@@ -80,7 +79,7 @@ class Timer extends React.Component {
       return(
         <div>
           
-        Running time: {this.state.time.s}
+         <p style={{color:"Green"}}>Running time: {this.state.time.s}</p>
         
         </div>
       );
@@ -88,4 +87,4 @@ class Timer extends React.Component {
   }
   
   export default Timer;
-  //Running time: {this.state.time.s}
+ 

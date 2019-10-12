@@ -32,19 +32,19 @@ class GuessingGame extends React.Component {
   }
 
   minChange = event => {
-    this.refs.child.startTimer()
+    
     this.setState({ min: event.target.value });
     
   };
 
   maxChange = event => {
     this.setState({ max: event.target.value });
-    
+    this.refs.child.startTimer()
   };
   handleclike = () => {
-   
+    
     this.setState({
-      random: Math.floor(Math.random()*(this.state.max-this.state.min+1)+this.state.min)
+      random: Math.floor(Math.random()*(this.state.max-this.state.min)+this.state.min)
     });
    
   };
@@ -75,7 +75,7 @@ class GuessingGame extends React.Component {
     this.setState({
       try: this.state.try + 1
     });
-    //console.log(this.state.try);
+    
 
     if (guess > 10 || guess < 1) {
       this.setState({
@@ -111,7 +111,7 @@ class GuessingGame extends React.Component {
       return (
         <div style={{ textAlign: "center", marginTop: "15%" }}>
           <h1 style={{ color: "green" }}>You Won!</h1>
-          <p>Random number: {this.state.random}</p>
+          <p>The Random number is: {this.state.random}</p>
           <p>Number of tries: {this.state.try}</p>
           <p>Total time taken:{this.refs.child.timecounter}</p>
           <button onClick={this.resetGame}>Play again</button>
@@ -130,24 +130,24 @@ class GuessingGame extends React.Component {
 
     return (
       <div
-        className="ui container" 
+        className="ui container"
         style={{
           margin: "30px",
           width: "40%",
           boxShadow:  "3px 3px 5px 6px #ccc"
-        }}
+        }} 
       >
         <div className="ui segment">
           <div className="ui form" style={{ color: "blue" }}>
             <div className="field">
-              <div>
-                <label style={{ color: "red", padding: "150px" }}>
+              <div className="">
+                <label style={{ color: "red", padding: "110px" }}>
                   RANDOM NUMBER GUESSING GAME
                 </label>               
-                 <Timer ref="child" />
+                 
               </div>
               <br />
-
+              <Timer ref="child" />
               <div style={{ textAlign: "center", marginTop: "1%" }}>
                 <div>
                   <label>Enter a number between 1 and 10</label>
@@ -182,7 +182,7 @@ class GuessingGame extends React.Component {
                         width: "32%"
                       }}
                     />
-                    <br />
+                    
                   </div>
 
                   <button
@@ -211,7 +211,7 @@ class GuessingGame extends React.Component {
                   placeholder="1-10"
                   onChange={this.userinput}
                 />
-                <br />
+                
                 <button onClick={this.onSubmit} style={{ height: "32px" }}>
                   Check
                 </button>
@@ -224,14 +224,4 @@ class GuessingGame extends React.Component {
   }
 }
 export default GuessingGame;
-/*<div>
-<p>This is the Random Number {this.state.random}</p>
-</div>
 
-,mozBoxShadow:   " 3px 3px 5px 6px #ccc",
-      webkitBoxShadow: "3px 3px 5px 6px #ccc",BoxShadow:"3px 3px 5px 6px #ccc",backgroundColor: "rgb(68,68,68)"
-
-
-
-
-*/
