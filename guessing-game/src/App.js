@@ -1,6 +1,6 @@
 import React from 'react'
 import Timer from './Timer'
-import  GuessingGame from "./GuessingGame"
+import  GuessingGame from './GuessingGame'; // Try to be consistent with quotes!
 function App(){
     return(
         <div>

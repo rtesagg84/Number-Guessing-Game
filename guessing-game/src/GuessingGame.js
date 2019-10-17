@@ -14,9 +14,9 @@ class GuessingGame extends React.Component {
 
     // This state declaration overwrites what has been set above.
     this.state = {
-      min: "",
+      min: 1, // maybe set defaults to 1 and 10?
       random: "",
-      max: "",
+      max: 10,
       userInput: "",
       counter: 5,
       try: 0
@@ -28,36 +28,46 @@ class GuessingGame extends React.Component {
     // Instead of picking the random number when the page loads, I would do it when the user clicks the 'start game' button!! This way you can generate the value based on the min and max values
   }
   componentDidUpdate(prevProps, prevState) {
+    // Status doesn't exist in state, because as said above, it's being overwritten
     if (prevState.status === this.state.random) {
       this.handleclike();
     }
   }
 
   minChange = event => {
-    const max = parseInt(this.state.max);
-    if (event.target.value >= max) {
-      alert('Must be smaller than max!');
-      return;
-    } else {
-      this.setState({ min: event.target.value });
-    }
+    const min = parseInt(event.target.value);
+    this.setState({ min: min });
   };
 
   maxChange = event => {
-    this.setState({ max: event.target.value });
-    this.refs.child.startTimer()
+    // You don't want to start the timer here, only when the button is clicked!
+    const max = parseInt(event.target.value);
+    this.setState({ max: max });
   };
 
+  // I would create a function called generateRandom or something similar which you can call so as to not repeat code.
   handleclike = () => {
-    
-    this.setState({
-      random: Math.floor(Math.random()*(this.state.max-this.state.min)+this.state.min)
-    });
-   
+    // Here you want to clear any previous timers, so you don't keep creating them and are unable to stop them
+    clearInterval(this.refs.child.state.timerId);
+
+    const { min, max } = this.state;
+    // Do some checking here to make sure the max is bigger than the min!
+
+    if (max > min) {
+      this.setState({
+        random: Math.floor(Math.random() * (max - min)) + min + 1
+      }, () => {
+        this.refs.child.startTimer(); // Start the timer here.
+      });
+    } else {
+      alert('The max has to be bigger than the min!');
+    }
+
   };
 
+  // The 'Number' can be omitted here javascript is smart enought to know what you mean when you just say parseInt
   userinput = event => {
-    const newValue = Number.parseInt(event.target.value, 10);
+    const newValue = parseInt(event.target.value);
 
     if (!newValue) {
       this.setState({
@@ -65,25 +75,28 @@ class GuessingGame extends React.Component {
       });
     } else {
       this.setState({
-        error: null
-      });
-
-      this.setState({
-        guess: Number.parseInt(event.target.value, 10) // the input value should be a number
+        error: null,  // You can combine these setState calls into one
+        guess: parseInt(event.target.value) // the input value should be a number
+        // You generally don't need to specify the radix value in this case because you want an error if you try to parse something other than a numerical string (ie. 'hello')
       });
     }
   };
- 
+
 
   onSubmit = event => {
-   
+
     event.preventDefault();
     const { random, guess } = this.state;
+    if (!guess || !random) { // If the user hasn't entered anything, no need to continue!
+      // If there's no random, the game hasn't started!
+      return;
+    }
 
     this.setState({
       try: this.state.try + 1
     });
-    
+
+    console.log(guess, random);
 
     // You want to make this conditional dynamic, and based on the user's inputs
     if (guess > this.state.max || guess < this.state.min) {
@@ -93,15 +106,10 @@ class GuessingGame extends React.Component {
       });
       return;
     }
-
     if (guess === random) {
       this.setState({ status: random });
-      
       return;
     }
-    
-
-
     if (guess > random) {
       this.setState({ nextMove: "Too high" });
     } else {
@@ -109,16 +117,13 @@ class GuessingGame extends React.Component {
     }
   };
   resetGame = () => {
-    if (this.state.status === this.state.random) {
-      this.setState(getInitialState());
-    }
     // If you are reloading the page, you don't need to setState above, it will get reset on page load
     window.location.reload(false);
   };
 
   render() {
     if (this.state.status === this.state.random) {
-      clearInterval(this.refs.child.timer)
+      clearInterval(this.refs.child.state.timerId)
       return (
         <div style={{ textAlign: "center", marginTop: "15%" }}>
           <h1 style={{ color: "green" }}>You Won!</h1>
@@ -129,13 +134,13 @@ class GuessingGame extends React.Component {
         </div>
       );
     }
-    if(this.state.counter===this.state.try){
-      clearInterval(this.refs.child.timer)
-     return( <div  style={{ textAlign: "center", marginTop: "15%" }}>
-         <h1 style={{ color: "green" }}>Oops!! you reach the maximom trial!</h1>
-         <button onClick={this.resetGame}>Play again</button>
+    if (this.state.counter === this.state.try) {
+      clearInterval(this.refs.child.state.timerId)
+      return (<div style={{ textAlign: "center", marginTop: "15%" }}>
+        <h1 style={{ color: "green" }}>Oops!! you reach the maximom trial!</h1>
+        <button onClick={this.resetGame}>Play again</button>
       </div>
-     )
+      )
 
     }
 
@@ -145,8 +150,8 @@ class GuessingGame extends React.Component {
         style={{
           margin: "30px",
           width: "40%",
-          boxShadow:  "3px 3px 5px 6px #ccc"
-        }} 
+          boxShadow: "3px 3px 5px 6px #ccc"
+        }}
       >
         <div className="ui segment">
           <div className="ui form" style={{ color: "blue" }}>
@@ -154,8 +159,8 @@ class GuessingGame extends React.Component {
               <div className="">
                 <label style={{ color: "red", padding: "110px" }}>
                   RANDOM NUMBER GUESSING GAME
-                </label>               
-                 
+                </label>
+
               </div>
               <br />
               <Timer ref="child" />
@@ -187,7 +192,7 @@ class GuessingGame extends React.Component {
                       type="number"
                       placeholder="10" // Same with this one. Define a default placeholder
                       value={this.state.max}
-                      onChange={event => {this.maxChange(event)}}
+                      onChange={event => { this.maxChange(event) }}
                       style={{
                         marginRight: "8px",
                         textAlign: "center",
@@ -195,7 +200,7 @@ class GuessingGame extends React.Component {
                         width: "32%"
                       }}
                     />
-                    
+
                   </div>
 
                   <button
@@ -221,10 +226,10 @@ class GuessingGame extends React.Component {
                     height: "32px",
                     width: "32%"
                   }}
-                  placeholder="1-10"
+                  placeholder={`${this.state.min}-${this.state.max}`} // you can dynamically change these placeholder values when the user changes the min and max
                   onChange={this.userinput}
                 />
-                
+
                 <button onClick={this.onSubmit} style={{ height: "32px" }}>
                   Check
                 </button>
