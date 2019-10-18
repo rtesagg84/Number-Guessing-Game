@@ -13,84 +13,102 @@ class GuessingGame extends React.Component {
     this.state = getInitialState();
 
     this.state = {
-      min: "",
+      min: 1,
       random: "",
-      max: "",
+      max: 10,
       userInput: "",
       counter: 5,
       try: 0
     };
   }
 
-  componentDidMount() {
-    this.handleclike();
-  }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.status === this.state.random) {
-      this.handleclike();
+      this.generateRandom();
     }
   }
 
   minChange = event => {
-    
-    this.setState({ min: event.target.value });
-    
+    event.preventDefault();
+    const message=`Min must be smaller than max!`
+    const max = parseInt(this.state.max);
+    if (event.target.value >= max) {
+      this.setState({
+      error:message
+      });
+      return;
+    } else {
+      this.setState({ min: event.target.value });
+    }
+    const userMin = parseInt(event.target.value);
+    this.setState({ min: userMin });
   };
 
   maxChange = event => {
-    this.setState({ max: event.target.value });
-    this.refs.child.startTimer()
+    event.preventDefault();
+    const userMax = parseInt(event.target.value);
+    this.setState({ max: userMax });
   };
-  handleclike = () => {
+  generateRandom = () => {
+    const { min, max } = this.state;
+    clearInterval(this.refs.child.state.timerId);
+   
+    if((min >=1 && max <=10) && max > min){
+      this.setState(
+        {
+          random: Math.floor(Math.random() * (max - min)) + min + 1
+        },
+        () => {
+          this.refs.child.startTimer();
+        }
+      );
+    } else{
     
     this.setState({
-      random: Math.floor(Math.random()*(this.state.max-this.state.min)+this.state.min)
-    });
-   
-  };
-  userinput = event => {
-    const newValue = Number.parseInt(event.target.value, 10);
-
-    if (!newValue) {
-      this.setState({
-        error: "Value must be a number!"
-      });
-    } else {
-      this.setState({
-        error: null
-      });
-
-      this.setState({
-        guess: Number.parseInt(event.target.value, 10) // the input value should be a number
-      });
+      error:"min and max must between 1 and 10"
+    })
+  }
+      
     }
+  
+
+
+  userinput = event => {
+    const newValue = parseInt(event.target.value, 10);
+    (!newValue)? this.setState({
+          error: "Value must be a number!"
+        })
+      : this.setState({
+          error: null
+        });
+    this.setState({
+      guess: parseInt(event.target.value, 10)
+    });
   };
- 
 
   onSubmit = event => {
-   
     event.preventDefault();
     const { random, guess } = this.state;
-
+    if (!guess || !random) {
+      return;
+    }
     this.setState({
       try: this.state.try + 1
     });
-    
 
-    if (guess > 10 || guess < 1) {
+    if (guess > this.state.max|| guess < this.state.min) {
+      const mes=`value must be between ${this.state.min} and ${this.state.max} `
       this.setState({
-        error: "Value must be between 1 and 10!"
+      error:mes
       });
       return;
     }
 
     if (guess === random) {
       this.setState({ status: random });
-      
+
       return;
     }
-    
-
 
     if (guess > random) {
       this.setState({ nextMove: "Too high" });
@@ -99,15 +117,13 @@ class GuessingGame extends React.Component {
     }
   };
   resetGame = () => {
-    if (this.state.status === this.state.random) {
-      this.setState(getInitialState());
-    }
     window.location.reload(false);
   };
 
+  
   render() {
     if (this.state.status === this.state.random) {
-      clearInterval(this.refs.child.timer)
+      clearInterval(this.refs.child.state.timerId);
       return (
         <div style={{ textAlign: "center", marginTop: "15%" }}>
           <h1 style={{ color: "green" }}>You Won!</h1>
@@ -118,15 +134,18 @@ class GuessingGame extends React.Component {
         </div>
       );
     }
-    if(this.state.counter===this.state.try){
-      clearInterval(this.refs.child.timer)
-     return( <div  style={{ textAlign: "center", marginTop: "15%" }}>
-         <h1 style={{ color: "green" }}>Oops!! you reach the maximom trial!</h1>
-         <button onClick={this.resetGame}>Play again</button>
-      </div>
-     )
-
+    if (this.state.counter === this.state.try) {
+      clearInterval(this.refs.child.state.timerId);
+      return (
+        <div style={{ textAlign: "center", marginTop: "15%" }}>
+          <h1 style={{ color: "green" }}>
+            Oops!! you reach the maximom trial!
+          </h1>
+          <button onClick={this.resetGame}>Play again</button>
+        </div>
+      );
     }
+    
 
     return (
       <div
@@ -134,17 +153,16 @@ class GuessingGame extends React.Component {
         style={{
           margin: "30px",
           width: "40%",
-          boxShadow:  "3px 3px 5px 6px #ccc"
-        }} 
+          boxShadow: "3px 3px 5px 6px #ccc"
+        }}
       >
         <div className="ui segment">
           <div className="ui form" style={{ color: "blue" }}>
             <div className="field">
-              <div className="">
-                <label style={{ color: "red", padding: "110px" }}>
+              <div style={{ color: "red", textAlign:"center" }}>
+                <label >
                   RANDOM NUMBER GUESSING GAME
-                </label>               
-                 
+                </label>
               </div>
               <br />
               <Timer ref="child" />
@@ -156,9 +174,11 @@ class GuessingGame extends React.Component {
                     <label>Min</label>
                     <input
                       type="number"
-                      placeholder="1-10"
-                      value={this.state.min}
-                      onChange={this.minChange}
+                      placeholder="1"
+                      value={this.state.usermin}
+                      onChange={event => {
+                        this.minChange(event);
+                      }}
                       style={{
                         marginRight: "8px",
                         textAlign: "center",
@@ -172,9 +192,11 @@ class GuessingGame extends React.Component {
                     <label>Max</label>
                     <input
                       type="number"
-                      placeholder="1-10"
-                      value={this.state.max}
-                      onChange={this.maxChange}
+                      placeholder="10"
+                      value={this.state.usermax}
+                      onChange={event => {
+                        this.maxChange(event);
+                      }}
                       style={{
                         marginRight: "8px",
                         textAlign: "center",
@@ -182,18 +204,19 @@ class GuessingGame extends React.Component {
                         width: "32%"
                       }}
                     />
-                    
                   </div>
 
                   <button
                     style={{ height: "32px", padding: "50" }}
                     type="GameStart"
-                    onClick={this.handleclike}
+                    onClick={this.generateRandom}
+
                   >
-                    StartGame
+                    Start Game
                   </button>
                 </div>
               </div>
+              
               <div style={{ textAlign: "center", marginTop: "15%" }}>
                 <p>{this.state.nextMove}</p>
                 {this.state.error && (
@@ -208,11 +231,12 @@ class GuessingGame extends React.Component {
                     height: "32px",
                     width: "32%"
                   }}
-                  placeholder="1-10"
+                  placeholder={`${this.state.min}-${this.state.max}`}
                   onChange={this.userinput}
                 />
-                
+
                 <button onClick={this.onSubmit} style={{ height: "32px" }}>
+                 
                   Check
                 </button>
               </div>
@@ -224,4 +248,5 @@ class GuessingGame extends React.Component {
   }
 }
 export default GuessingGame;
-
+//
+// 

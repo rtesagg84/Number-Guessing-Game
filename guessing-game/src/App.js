@@ -1,10 +1,8 @@
-import React from 'react'
-import Timer from './Timer'
+import React from "react"
 import  GuessingGame from "./GuessingGame"
 function App(){
     return(
         <div>
-        <Timer/>
         <GuessingGame/>
         </div>
     )

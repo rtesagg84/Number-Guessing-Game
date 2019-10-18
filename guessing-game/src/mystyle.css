@@ -5,3 +5,25 @@
   height: 32%;
   width: 32%
   }
+.data {
+  text-align: center; 
+   color: red;
+}
+.message{
+  color: green;
+}
+
+
+
+ .shadow{
+    height: 40px;
+    width: 40%;
+    padding: 'none';
+    background-color:gray;
+    box-shadow: 10px 10px 10px 10px black
+}
+.Primary {
+  color: green;
+  text-align: center;
+  margin: 25px;
+  }
